@@ -13,13 +13,19 @@ export default class App extends React.Component {
     timerId: 0,
     opponentTimerId: 0,
     active: false,
-    gameOver: false
+    gameOver: false,
+    highScore: 0,
+    level: 1
   };
 
   gameOver = () => {
+    const speed = (60 - this.state.timer);
+    if(speed < this.state.highScore || this.state.highScore === 0){
+      this.setState({ highScore: speed})
+    }
     this.reset();
     this.setState(() => {
-      return { gameOver: true };
+      return { gameOver: true, level: this.state.level +1};
     });
   };
   pointCounter = () => {
@@ -31,7 +37,7 @@ export default class App extends React.Component {
   reset = () => {
     clearInterval(this.state.timerId);
     clearInterval(this.state.opponentTimerId);
-    this.setState({ timer: 60, active: false, totalCount: 0, gameOver: false });
+    this.setState({  timer: 60 - (this.state.level * 10), active: false, totalCount: 0, gameOver: false });
   };
   toggle = () => {
     if (!this.state.active) {
@@ -70,7 +76,6 @@ export default class App extends React.Component {
     const leafs = Array.from({
       length: Math.floor(this.state.totalCount / 10)
     });
-
     return (
       <div>
         <ul>
@@ -87,6 +92,8 @@ export default class App extends React.Component {
         </button>
         </li>
         <li><p className="timer float-right"> points: {this.state.totalCount}</p></li>
+        <li><p className="timer float-right"> speed record: {this.state.highScore}s</p></li>
+        <li><p className="timer"> level: {this.state.level}</p></li>
         <div className="clear" />
         </ul>
         <div className="container">
