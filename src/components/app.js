@@ -13,10 +13,15 @@ export default class App extends React.Component {
     timerId: 0,
     opponentTimerId: 0,
     active: false,
-    gameOver: false
+    gameOver: false,
+    highScore: 0
   };
 
   gameOver = () => {
+    const speed = (60 - this.state.timer);
+    if(speed < this.state.highScore || this.state.highScore === 0){
+      this.setState({ highScore: speed})
+    }
     this.reset();
     this.setState(() => {
       return { gameOver: true };
@@ -70,7 +75,11 @@ export default class App extends React.Component {
     const leafs = Array.from({
       length: Math.floor(this.state.totalCount / 10)
     });
-
+    if(this.state.gameOver){
+      return (
+        <p>hello</p>
+      )
+    }
     return (
       <div>
         <ul>
@@ -87,6 +96,7 @@ export default class App extends React.Component {
         </button>
         </li>
         <li><p className="timer float-right"> points: {this.state.totalCount}</p></li>
+        <li><p className="timer float-right"> speed record: {this.state.highScore}s</p></li>
         <div className="clear" />
         </ul>
         <div className="container">
